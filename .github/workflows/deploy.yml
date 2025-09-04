@@ -52,7 +52,7 @@ jobs:
             docker rm router-jwt-app || true
 
             # Run Spring Boot container with DB env variables
-            docker run -d --name spring_9jwt-app --network cloud-cicid-net -p 8080:8080 -e DB_USERNAME=${{ secrets.DB_USERNAME }} -e DB_PASSWORD=${{ secrets.DB_PASSWORD }} -e DB_URL=${{ secrets.DB_URL }} ${{ secrets.DOCKER_HUB_USERNAME }}/spring_9jwt-app
+            docker run -d --name spring_9jwt-app --network cloud-cicid-net -p 8080:8080 -e DB_USERNAME="${{ secrets.DB_USERNAME }}" -e DB_PASSWORD="${{ secrets.DB_PASSWORD }}"" -e DB_URL="${{ secrets.DB_URL }}" "${{ secrets.DOCKER_HUB_USERNAME }}"/spring_9jwt-app
 
             # Run Frontend container
             docker run -d --name router-jwt-app --network cloud-cicid-net -p 80:80 ${{ secrets.DOCKER_HUB_USERNAME }}/router-jwt-app
