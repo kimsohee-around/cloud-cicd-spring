@@ -24,9 +24,9 @@ jobs:
 
       - name: Build & Push Frontend Docker image
         run: |
-          docker build -t ${{ secrets.DOCKER_HUB_USERNAME }}/routerAndjwt-app ./routerAndjwt
+          docker build -t ${{ secrets.DOCKER_HUB_USERNAME }}/router-jwt-app ./routerAndjwt
           echo "${{ secrets.DOCKER_HUB_PASSWORD }}" | docker login -u "${{ secrets.DOCKER_HUB_USERNAME }}" --password-stdin
-          docker push ${{ secrets.DOCKER_HUB_USERNAME }}/routerAndjwt-app
+          docker push ${{ secrets.DOCKER_HUB_USERNAME }}/router-jwt-app
 
       # ---------------------------
       # 2️⃣ Deploy to EC2 via SSH
@@ -40,16 +40,16 @@ jobs:
           script: |
             # Ensure docker network exists
             docker network create cloud-cicid-net || true
-            
+
             # Pull latest images
             docker pull ${{ secrets.DOCKER_HUB_USERNAME }}/spring_9jwt-app
-            docker pull ${{ secrets.DOCKER_HUB_USERNAME }}/routerAndjwt-app
+            docker pull ${{ secrets.DOCKER_HUB_USERNAME }}/router-jwt-app
 
             # Stop and remove existing containers if running
             docker stop spring_9jwt-app || true
             docker rm spring_9jwt-app || true
-            docker stop routerAndjwt-app || true
-            docker rm routerAndjwt-app || true
+            docker stop router-jwt-app || true
+            docker rm router-jwt-app || true
 
             # Run Spring Boot container with DB env variables
             docker run -d --name spring_9jwt-app \
@@ -60,7 +60,7 @@ jobs:
               ${{ secrets.DOCKER_HUB_USERNAME }}/spring_9jwt-app
 
             # Run Frontend container
-            docker run -d --name routerAndjwt-app \
+            docker run -d --name router-jwt-app \
               --network cloud-cicid-net \
               -p 80:80 \
-              ${{ secrets.DOCKER_HUB_USERNAME }}/routerAndjwt-app
+              ${{ secrets.DOCKER_HUB_USERNAME }}/router-jwt-app
