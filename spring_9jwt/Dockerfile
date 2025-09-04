@@ -1,6 +1,6 @@
 # COPY build/libs/*.jar spring_9jwt.jar
 # ---- Build Stage ----
-FROM gradle:4.4.1-jdk21 AS builder
+FROM gradle:8.5-jdk21 AS builder
 WORKDIR /app
 COPY build.gradle settings.gradle ./
 COPY gradlew . 
@@ -9,7 +9,7 @@ COPY src ./src
 RUN ./gradlew build -x test --no-daemon
 
 # ---- Run Stage ----
-FROM openjdk:21-jdk
+FROM openjdk:21-jre-slim
 WORKDIR /app
 COPY --from=builder /app/build/libs/*.jar  spring_9jwt.jar
 EXPOSE 8080
