@@ -9,7 +9,7 @@ COPY src ./src
 RUN ./gradlew build -x test --no-daemon
 
 # ---- Run Stage ----
-FROM openjdk:21-jre-slim
+FROM amazoncorretto:21
 WORKDIR /app
 COPY --from=builder /app/build/libs/*.jar  spring_9jwt.jar
 EXPOSE 8080
